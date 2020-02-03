@@ -25,7 +25,7 @@ class TeamMember extends Component {
 }
 
 TeamMember.propTypes = {
-    member: PropTypes.string
+    type: PropTypes.string.isRequired
 };
 
 export default TeamMember;
