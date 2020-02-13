@@ -14,7 +14,7 @@ const controls = [
 //Built in the functional style
 const buildControls = (props) => (
     <div className={classes.BuildControls}>
-        <p>Current Hourly Rate Amount: {props.cost}</p>
+        <p>Current Hourly Rate Amount: <strong>{props.cost}</strong></p>
 
         {controls.map(ctrl => (
             //Set of properties in the BuildControl
@@ -25,6 +25,9 @@ const buildControls = (props) => (
              remove={() => props.memberRemoved(ctrl.type)} 
              disabled={props.disabled[ctrl.type]} />
         ))}
+        <button 
+            className={classes.InviteButton}
+            disabled={!props.sendInvitation}>SEND INVITATION</button>
     </div>
 );
 

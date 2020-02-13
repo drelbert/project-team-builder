@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Auxiliary from '../../hoc/Auxiliary';
 import Team from '../../components/Team/Team';
 import BuildControls from '../../components/Team/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
 
 const MEMBER_RATES = {
     lead: 60,
@@ -16,7 +17,18 @@ class TeamBuilder extends Component {
             lead: 0,
             dev: 0
         },
-        baseRate: 50
+        baseRate: 50,
+        sendInvitation: false
+    }
+
+    updateInviteState (members) {
+        const sum = Object.keys(members).map(memberKey => {
+            return members[memberKey]
+        })
+        .reduce((sum, el) => {
+            return sum + el;
+        }, 0);
+        this.setState({sendInvitation: sum > 0});
     }
 
     addMemberHandler = (type) => {
@@ -30,6 +42,7 @@ class TeamBuilder extends Component {
         const oldTotal = this.state.baseRate;
         const newTotal = oldTotal + rateAddition;
         this.setState({baseRate: newTotal, members: updatedMembers});
+        this.updateInviteState(updatedMembers);
     }
 
     removeMemberHandler = (type) => {
@@ -46,6 +59,7 @@ class TeamBuilder extends Component {
         const oldTotal = this.state.hourlyRateTotal;
         const newTotal = oldTotal - rateDeduction;
         this.setState({rateAddition: newTotal, members: updatedMembers});
+        this.updateInviteState(updatedMembers);
     }
 
     //Lifecycle render method here
@@ -60,11 +74,13 @@ class TeamBuilder extends Component {
         //Returning the JSX code each with a set of properties
         return (
             <Auxiliary>
+                <Modal />
                 <Team members={this.state.members} />
                 <BuildControls
                     memberAdded={this.addMemberHandler} 
                     memberRemoved={this.removeMemberHandler} 
                     disabled={disabledInfo}
+                    sendInvitation={this.state.sendInvitation}
                     cost={this.state.baseRate}/>
             </Auxiliary>
         );
